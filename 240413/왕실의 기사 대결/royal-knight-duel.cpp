@@ -204,7 +204,7 @@ bool pullGISA(int id, const int& flag, const int& std) {
 			DEBUG && cout << "해당하는 위치에 기사 있음 target: " << targetId << "\n";
 			bool rst; 
 
-			if (REF.find(targetId) != REF.end()) 	return (true);
+			if (REF.find(targetId) != REF.end()) 	continue;
 			
 			rst = pullGISA(targetId, flag, std);
 			if (rst) {
@@ -271,15 +271,18 @@ void solution() {
 		DEBUG && cout << "PULL GO" << endl;
 		rst = pullGISA(id, flag, id);
 
-		DEBUG && cout << " HASH MAP SIZE: " << REF.size() << "\n";
-		for (auto iter = begin(REF); iter != end(REF); ++iter) {
-			int key = iter->first;
-			Node t = iter->second;
+		DEBUG && cout << " HASH MAP SIZE: " << REF.size() << "   "  << (rst ? "TRUE" : "False") << "\n";
+		if (rst) {
+				for (auto iter = begin(REF); iter != end(REF); ++iter) {
+				int key = iter->first;
+				Node t = iter->second;
 
-			DEBUG && cout << "id: " << key << " -> " << "y: " << t.y << "  x: " << t.x << "  health: " << t.health << "  weight: " << t.weight << "  height: " << t.height << "  k: " << t.k << "\n";
+				DEBUG && cout << "id: " << key << " -> " << "y: " << t.y << "  x: " << t.x << "  health: " << t.health << "  weight: " << t.weight << "  height: " << t.height << "  k: " << t.k << "\n";
 
-			GISA[key] = t;
+				GISA[key] = t;
+			}
 		}
+		
 
 		DEBUG && cout << "\n";
 	}
