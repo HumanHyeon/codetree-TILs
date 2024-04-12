@@ -5,8 +5,6 @@
 using namespace std;
 using pii = pair<int, int>;
 
-#define DEBUG 0
-
 #define MAX 41
 
 #define EMPTY 0
@@ -29,7 +27,6 @@ typedef struct {
 	int k;	//초기 체력. 절대 수정하지 않음
 	int health;	//체력(1~100)
 } Node;
-
 
 int L;	//체스판의 크기(3~40)
 int N;	//기사의 수(1~30)
@@ -151,110 +148,41 @@ vector<pii> getvPosList(const int& id, const int& flag) {
 */
 bool pullGISA(int id, const int& flag, const int& std) {
 	vector<pii> vPosList;
-
-	DEBUG && cout << "  id: " << id << "  flag: " << flag << "\n";
+	Node node;
 
 	vPosList = getvPosList(id, flag);
-
-
-	DEBUG && cout << "  size: " << vPosList.size() << " -> ";
-	for (int i = 0; i < vPosList.size(); ++i)
-		DEBUG && cout << "(" << vPosList[i].first << ", " << vPosList[i].second << ")  ";
-	DEBUG && cout << "\n";
-
 	for (int i = 0; i < vPosList.size(); ++i) {
 		const pii& vPos = vPosList[i];
 		int targetId;
 
-		DEBUG && cout << "[" << vPos.first << ", " << vPos.second << "]\n";
-
-		if (!isValid(vPos.first, vPos.second)) {
-			DEBUG && cout << "좌표값 벗어남\n";
-			return (false);
-		}	
-		if (MAP[vPos.first][vPos.second] == WALL) {
-			DEBUG && cout << "벽이 있음\n";
-			return (false);
-		}	
+		if (!isValid(vPos.first, vPos.second)) 	return (false);
+		if (MAP[vPos.first][vPos.second] == WALL)	return (false);
 		
 		targetId = checkRange(vPos.first, vPos.second);
-		if (targetId == -1) {	//바로 이동 가능. 해당하는 위치에 기사 없음.
-			DEBUG && cout << "해당 하는 위치에 기사 없음 target: " << targetId << "\n";
-
-			// Node node;
-
-			// node.y = vPosList[0].first;
-			// node.x = vPosList[0].second;
-			
-			// node.height = GISA[id].height;
-			// node.weight = GISA[id].weight;
-			// node.k = GISA[id].k;
-
-			// if (std == id)
-			// 	node.health = GISA[id].health;
-			// else {
-			// 	int damage = getDamage(make_pair(node.y, node.x), id);
-
-			// 	node.health = GISA[id].health - damage;
-			// }
-
-			// return (true);
-		}
-		else {	//해당하는 위치에 기사 있음.
-			DEBUG && cout << "해당하는 위치에 기사 있음 target: " << targetId << "\n";
+		if (targetId != -1) {	//해당하는 위치에 기사 있음.
 			bool rst; 
 
 			if (REF.find(targetId) != REF.end()) 	continue;
 			
 			rst = pullGISA(targetId, flag, std);
-			if (rst) {
-				// Node node;
-
-				// node.y = vPosList[0].first;
-				// node.x = vPosList[0].second;
-				
-				// node.height = GISA[id].height;
-				// node.weight = GISA[id].weight;
-				// node.k = GISA[id].k;
-
-				// if (std == id)
-				// 	node.health = GISA[id].health;
-				// else {
-				// 	int damage = getDamage(make_pair(node.y, node.x), id);
-
-				// 	node.health = GISA[id].health - damage;
-				// }
-
-				//return (true);
-			}
-			else 
+			if (!rst)
 				return (false);
 		}
 	}
 
-	Node node;
-
 	node.y = GISA[id].y + dy[flag];
-	node.x = GISA[id].x + dx[flag];
-	
+	node.x = GISA[id].x + dx[flag];	
 	node.height = GISA[id].height;
 	node.weight = GISA[id].weight;
 	node.k = GISA[id].k;
 
-	if (std == id)
-		node.health = GISA[id].health;
-	else {
-		int damage = getDamage(make_pair(node.y, node.x), id);
-
-		node.health = GISA[id].health - damage;
-	}
+	if (std == id)	node.health = GISA[id].health;
+	else			node.health = GISA[id].health - getDamage(make_pair(node.y, node.x), id);
 
 	REF[id] = node;
+
 	return (true);
-//	return (false);
 }
-
-
 
 void solution() {
 	for (vector<pii>::iterator iter = begin(COMMAND); iter != end(COMMAND); ++iter) {
@@ -262,29 +190,14 @@ void solution() {
 		int flag = iter->second;
 		bool rst;
 
-		DEBUG && cout << "First Order:   id = " << id << "  flag = " << flag << endl;
-
-		REF.clear();
-
 		if (GISA[id].health <= 0)	continue;
 
-		DEBUG && cout << "PULL GO" << endl;
 		rst = pullGISA(id, flag, id);
-
-		DEBUG && cout << " HASH MAP SIZE: " << REF.size() << "   "  << (rst ? "TRUE" : "False") << "\n";
 		if (rst) {
-				for (auto iter = begin(REF); iter != end(REF); ++iter) {
-				int key = iter->first;
-				Node t = iter->second;
-
-				DEBUG && cout << "id: " << key << " -> " << "y: " << t.y << "  x: " << t.x << "  health: " << t.health << "  weight: " << t.weight << "  height: " << t.height << "  k: " << t.k << "\n";
-
-				GISA[key] = t;
-			}
+			for (unordered_map<int, Node>::iterator iter = begin(REF); iter != end(REF); ++iter)
+				GISA[iter->first] = iter->second;
 		}
-		
-
-		DEBUG && cout << "\n";
+		REF.clear();
 	}
 
 	//정답 계산: 생존한 기사들이 받은 데미지의 합
@@ -316,28 +229,11 @@ void input() {
 	}		
 }
 
-void DEBUG_FUNC() {
-/*
-	for (int y = 0; y < L; ++y)
-		for (int x = 0; x < L; ++x) {
-			int id = checkRange(y, x);
-
-			cout << "(" << y << ", " << x << ") " << id << endl;
-		}
-*/
-
-	vector<pii> vl = getvPosList(0, DOWN);
-	cout << "size: " << vl.size() << endl;
-	for (int i = 0; i < vl.size(); ++i)
-		cout << "(" << vl[i].first << ", " << vl[i].second << ")\n";
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);	cout.tie(NULL);
 
 	input();
-//	DEBUG_FUNC();
 	solution();
 
 	cout << answer;
