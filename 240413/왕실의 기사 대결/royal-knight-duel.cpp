@@ -80,57 +80,40 @@ int getDamage(const pii& vPos, const int& id) {
 	return (damage);
 }
 
-/* TODO: id에 해당하는 기사를 flag 방향으로 민 후 좌표값들을 반환한다.
-	-(X) 1. 죽은 기사의 id 이거나 2. 맵 밖으로 이동하거나 3. 벽이 있는 좌표의 경우 담지 않는다.
- */
+/* TODO: id에 해당하는 기사를 flag 방향으로 민 후 좌표값들을 반환한다. */
 vector<pii> getvPosList(const int& id, const int& flag) {
 	const Node& t = GISA[id];
 	vector<pii> vPosList, empty;
 	pii vPos;
 
-//	if (t.health <= 0)	return (empty);
-
 	if (flag == UP) {
 		vPos.first = t.y + dy[flag];
-		
-//		if (!isValid(vPos.first, t.x))	return (empty);
-		
 		for (int i = 0; i < t.weight; ++i) {
 			vPos.second = t.x + i;
-//			if (MAP[vPos.first][vPos.second] == WALL)	return (empty);
 			vPosList.push_back(vPos);
 		}
 	}
 	else if (flag == RIGHT) {
 		vPos.second = t.x + t.weight - 1 + dx[flag];
 
-//		if (!isValid(t.y, vPos.second))	return (empty);
-
 		for (int i = 0; i < t.height; ++i) {
 			vPos.first = t.y + i;
-//			if (MAP[vPos.first][vPos.second] == WALL)	return (empty);
 			vPosList.push_back(vPos);
 		}
 	}
 	else if (flag == DOWN) {
 		vPos.first = t.y + t.height - 1 + dy[flag];
 
-//		if (!isValid(vPos.first, t.x))	return (empty);
-
 		for (int i = 0; i < t.weight; ++i) {
 			vPos.second = t.x + i;
-//			if (MAP[vPos.first][vPos.second] == WALL)	return (empty);
 			vPosList.push_back(vPos);
 		}
 	}
 	else {	//LEFT
 		vPos.second = t.x + dx[flag];
 
-//		if (!isValid(t.y, vPos.second))	return (empty);
-
 		for (int i = 0; i < t.height; ++i) {
 			vPos.first = t.y + i;
-//			if (MAP[vPos.first][vPos.second] == WALL)	return (empty);
 			vPosList.push_back(vPos);
 		}
 	}
