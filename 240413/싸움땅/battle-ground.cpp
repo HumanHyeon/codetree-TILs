@@ -107,7 +107,7 @@ void moveLoser(int id, int _y, int _x) {
 
 	DOUT << "[moveLoser] " << "paraPos: (" << _y << ", " << _x << ")  -> 이동할 위치: (" << ny << ", " << nx << ")\n";
 
-	//REF[ny][nx] = id;
+	REF[ny][nx] = id;
 	t.y = ny;
 	t.x = nx;
 	if (!MAP[ny][nx].empty()) {
@@ -173,8 +173,7 @@ void run() {
 				updateREF(ny, nx, i);
 				t.y = ny;
 				t.x = nx;
-				moveLoser(cmpId, ny, nx);
-				REF[cmp.y][cmp.x] = cmpId;		
+				moveLoser(cmpId, ny, nx);		
 				
 				if (t.gun != 0)	MAP[ny][nx].push(t.gun);
 
@@ -182,7 +181,6 @@ void run() {
 					t.gun = MAP[ny][nx].top();
 					MAP[ny][nx].pop();					
 				}
-
 			}
 			else {	//t(이동자)가 이동
 				DOUT << "이동자(" << i << ")가 이동   기존자: strong= " << cmp.strong << "  총= " << cmp.gun << "  이동자: strong= " << t.strong<< "  총= " << t.gun << "\n";
@@ -190,7 +188,6 @@ void run() {
 
 				REF[t.y][t.x] = EMPTY;
 				moveLoser(i, ny, nx);
-				REF[t.y][t.x] = i;
 
 				if (cmp.gun != 0)	MAP[ny][nx].push(cmp.gun);
 
@@ -200,7 +197,6 @@ void run() {
 				}
 			}
 		}
-
 		DOUT << "\n";
 	}
 }
@@ -238,16 +234,11 @@ void input() {
 	}
 }
 
-void DEBUG_FUNC() {
-
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);	cout.tie(NULL);
 
 	input();
-	DEBUG_FUNC();
 	solution();
 
 	for (int i = 0; i < M; ++i)
