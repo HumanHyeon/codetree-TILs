@@ -107,8 +107,7 @@ void moveLoser(int id, int _y, int _x) {
 
 	DOUT << "[moveLoser] " << "paraPos: (" << _y << ", " << _x << ")  -> 이동할 위치: (" << ny << ", " << nx << ")\n";
 
-	//updateREF(ny, nx, id);
-	REF[ny][nx] = id;
+	//REF[ny][nx] = id;
 	t.y = ny;
 	t.x = nx;
 	if (!MAP[ny][nx].empty()) {
@@ -175,7 +174,7 @@ void run() {
 				t.y = ny;
 				t.x = nx;
 				moveLoser(cmpId, ny, nx);
-			//	REF[cmp.y][cmp.x] = cmpId;		
+				REF[cmp.y][cmp.x] = cmpId;		
 				
 				if (t.gun != 0)	MAP[ny][nx].push(t.gun);
 
@@ -191,6 +190,7 @@ void run() {
 
 				REF[t.y][t.x] = EMPTY;
 				moveLoser(i, ny, nx);
+				REF[t.y][t.x] = i;
 
 				if (cmp.gun != 0)	MAP[ny][nx].push(cmp.gun);
 
