@@ -18,9 +18,7 @@ int answer;
 vvi SEC(SIZE, vi(SIZE));
 vi secCnt(SIZE * SIZE);
 vector<pii> POS(SIZE * SIZE);
-//bool CHK[SIZE * SIZE];
 bool visited[SIZE][SIZE];
-//vector<queue<pii> > NEAR(SIZE * SIZE);	// [index가 secId, (근처 secId, 인접한 변 개수)] <- 무조건 내 secId보다 큰 secId만 추가
 
 
 bool printArr(vvi& T, string s = "") {
@@ -102,7 +100,6 @@ int getScore() {
 
 		DEBUG && cout << "id: " << id << " GO!\n";
 
-		//memset(CHK, false, sizeof(CHK));
 		memset(visited, false, sizeof(visited));
 
 		q.push(pos);
@@ -112,15 +109,12 @@ int getScore() {
 			int x = q.front().second;
 			q.pop();
 
-			//DEBUG && cout << "y: " << y << " x: " << x << "\n";
 			for (int flag = 0; flag < 4; ++flag) {
 				int ny = y + dy[flag];
 				int nx = x + dx[flag];
 
 				if (!isValid(ny, nx))	continue;
 				if (visited[ny][nx])	continue;
-
-				//DEBUG && cout << "ny: " << ny << " nx: " << nx << "\n";
 
 				if (SEC[ny][nx] < id) continue;
 				else if (SEC[ny][nx] == id) {
@@ -129,8 +123,6 @@ int getScore() {
 				}
 				else {
 					DEBUG && cout << "\t맞닿은 변 발견! SEC: (" << id << ", " << SEC[ny][nx] << ")  y: " << y << " x: " << x << " ny: " << ny << " nx: " << nx << "\n"; 
-					// if (CHK[SEC[ny][nx]])
-					//CHK[SEC[ny][nx]] = true;
 					++near[SEC[ny][nx]];
 				}
 			}
@@ -177,32 +169,16 @@ void doCycle() {
 	int x = N / 2;
 
 	for (int i = 1; i <= len; ++i) {
-		// swap(MAP[y][x + i], MAP[y - i][x]);
-		// swap(MAP[y + i][x + i], MAP[y][x + i]);
-		// swap(MAP[y][x - i], MAP[y + i][x]);
-		// swap(MAP[y - i][x], MAP[y][x - i]);
-
 		q.push(MAP[y - i][x]);
 		q.push(MAP[y][x - i]);
 		q.push(MAP[y + i][x]);
 		q.push(MAP[y][x + i]);
-
-		// queue<int> t = q;
-		// while (!t.empty()) {
-		// 	cout << t.front() << " ";
-		// 	t.pop();
-		// } 	putchar('\n');
 
 		MAP[y][x - i] = q.front();	q.pop();
 		MAP[y + i][x] = q.front(); 	q.pop();
 		MAP[y][x + i] = q.front(); 	q.pop();
 		MAP[y - i][x] = q.front();	q.pop();
 	}
-
-	// runMiniCycle(0, 0, len);
-	// runMiniCycle(len + 1, 0, len);
-	// runMiniCycle(0, len + 1, len);
-	// runMiniCycle(len + 1, len + 1, len);
 
 	for (int y = 0; y < len; ++y)	for (int x = 0; x < len; ++x)	q.push(MAP[y][x]);
 	for (int x = len - 1; x >= 0; --x)	for (int y = 0; y < len; ++y) { MAP[y][x] = q.front(); q.pop(); }
@@ -234,7 +210,7 @@ void solution() {
 	DEBUG && printArr(MAP, "초기 MAP Status");
 	for (int i = 1; i <= 4; ++i) {
 		int score = getScore();	// [1]
-		doCycle(); // [2]
+		if (i != 4) doCycle(); // [2]
 		answer += score; // [3]
 		DEBUG && printArr(MAP, to_string(i) + "회전 후 MAP Status (이번 턴 획득 점수: " + to_string(score) + ")");
 		DEBUG && cout << "총 점수: " << answer << "\n";
