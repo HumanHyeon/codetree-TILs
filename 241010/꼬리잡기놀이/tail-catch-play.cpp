@@ -286,6 +286,7 @@ public:
 
 				if (MAP[ny][nx].first == 3)	return;
 				chk = true;
+				break;
 			}
 		}
 	}
