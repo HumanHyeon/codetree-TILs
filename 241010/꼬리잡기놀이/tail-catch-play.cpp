@@ -1,3 +1,9 @@
+/**
+ * 이 문제에서 잘못한 점
+ * 1. 팀 구성할 때, BFS가 아닌 DFS로 짤 것
+ * 2. MAP에 추가하지말고 Section 관리 배열을 따로 만들 것
+ */
+
 #include <bits/stdc++.h>
 using namespace std;
 using pii = pair<int, int>;
@@ -72,8 +78,6 @@ public:
 		for (int flag = 0; flag < 4; ++flag) {
 			int ny = head.first + dy[flag];
 			int nx = head.second + dx[flag];
-
-//			cout << "y : " << ny << "x: " << nx << "\n";
 
 			if (!isValid(ny, nx))	continue;
 			if (MAP[ny][nx].first == 0 || MAP[ny][nx].first == 2)	continue;
@@ -180,43 +184,6 @@ public:
 				break;
 			}
 		}
-
-/*
-		node.y = t.first;
-		node.x = t.second;
-		node.cnt = 1;
-		q.push(node);
-		visited[t.first][t.second] = true;
-		while (!q.empty()) {
-			int y = q.front().y;
-			int x = q.front().x;
-			int cnt = q.front().cnt;
-			q.pop();
-
-//			cout << "y: " << y << "x: " << x << endl;
-
-			if (MAP[y][x].first == 1)	{
-//				cout << "HIT cnt: " << cnt << "\n";
-				dist = cnt;
-				break;
-			}
-
-			for (int flag = 0; flag < 4; ++flag) {
-				int ny = y + dy[flag];
-				int nx = x + dx[flag];
-
-				if (!isValid(ny, nx))	continue;
-				if (visited[ny][nx] || MAP[ny][nx].first == 0 || MAP[ny][nx].first == 4)	continue;
-
-				node.y = ny;
-				node.x = nx;
-				node.cnt = cnt + 1;
-				q.push(node);
-				visited[ny][nx] = cnt;
-			}
-		}
-*/
-
 		changeHead(TEAM.at(id));
 
 		return (dist * dist);
@@ -268,8 +235,6 @@ public:
 			int y = q.front().first;
 			int x = q.front().second;
 			q.pop();
-
-			// cout << "y : " << y << " x: " << x << endl;
 
 			for (int flag = 0; flag < 4; ++flag) {
 				int ny = y + dy[flag];
