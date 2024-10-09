@@ -7,7 +7,6 @@ using pii = pair<int, int>;
 #define BOTTOM 2
 enum DIRECTION { UP, RIGHT, DOWN, LEFT };
 
-
 const int dy[] = { -1, 0, 1, 0 };
 const int dx[] = { 0, 1, 0, -1 };
 
