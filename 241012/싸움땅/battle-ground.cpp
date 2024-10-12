@@ -169,11 +169,14 @@ public:
 						MAP[cmp.y][cmp.x].pop();
 					}
 
-					if (node.gun < MAP[node.y][node.x].top()) {
-						if (node.gun != 0) pq.push(node.gun);
-						node.gun = pq.top();
-						pq.pop();
+					if (!MAP[node.y][node.x].empty()) {
+						if (node.gun < MAP[node.y][node.x].top()) {
+							if (node.gun != 0) pq.push(node.gun);
+							node.gun = pq.top();
+							pq.pop();
+						}
 					}
+					
 				}
 				else {	//기존 사람이 이김
 					DEBUG && printf("(%d, %d) 좌표에서 충돌, 기존 사람이 이김\n", ny, nx);
@@ -183,7 +186,7 @@ public:
 						MAP[ny][nx].push(node.gun);	
 						node.gun = 0;
 					}
-
+                    
 					for (int cycle = 0; cycle < 4; ++cycle) {
 						ny = node.y + dy[node.flag];
 						nx = node.x + dx[node.flag];
@@ -204,11 +207,14 @@ public:
 						MAP[node.y][node.x].pop();
 					}
 
-					if (cmp.gun < MAP[cmp.y][cmp.x].top()) {
-						if (cmp.gun != 0) pq.push(cmp.gun);
-						cmp.gun = pq.top();
-						pq.pop();
+					if (!MAP[cmp.y][cmp.x].empty()) {
+						if (cmp.gun < MAP[cmp.y][cmp.x].top()) {
+							if (cmp.gun != 0) pq.push(cmp.gun);
+							cmp.gun = pq.top();
+							pq.pop();
+						}
 					}
+
 				}
 			}
 			DEBUG && printArr(POS, to_string(id) + " 사람이 이동한 후 상태");
@@ -219,6 +225,7 @@ public:
 	void solution() {
 		DEBUG && printArr(MAP, "초기 총 상태");
 		DEBUG && printArr(POS, "초기 사람 위치");
+		DEBUG && printAllNode();
 
 		/**
 		 * 1. 첫 번재 플레이어 부터 본인의 방향으로 1칸 이동
